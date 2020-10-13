@@ -31,7 +31,7 @@ contract('SupplyChain', function(accounts) {
 
     it("should add an item with the provided name and price", async() => {
         const tx = await instance.addItem(name, price, {from: alice})
-                
+
         const result = await instance.fetchItem.call(0)
 
         assert.equal(result[0], name, 'the name of the last added item does not match the expected value')
@@ -44,7 +44,7 @@ contract('SupplyChain', function(accounts) {
     it("should emit a LogForSale event when an item is added", async()=> {
         let eventEmitted = false
         const tx = await instance.addItem(name, price, {from: alice})
-        
+
         if (tx.logs[0].event == "LogForSale") {
             eventEmitted = true
         }
@@ -100,7 +100,7 @@ contract('SupplyChain', function(accounts) {
         await instance.addItem(name, price, {from: alice})
         await instance.buyItem(0, {from: bob, value: excessAmount})
         await instance.shipItem(0, {from: alice})
-	
+
         const result = await instance.fetchItem.call(0)
 
         assert.equal(result[3].toString(10), 2, 'the state of the item should be "Shipped", which should be declared third in the State Enum')
@@ -125,7 +125,7 @@ contract('SupplyChain', function(accounts) {
         await instance.buyItem(0, {from: bob, value: excessAmount})
         await instance.shipItem(0, {from: alice})
         await instance.receiveItem(0, {from: bob})
-	
+
         const result = await instance.fetchItem.call(0)
 
         assert.equal(result[3].toString(10), 3, 'the state of the item should be "Received", which should be declared fourth in the State Enum')
@@ -135,7 +135,7 @@ contract('SupplyChain', function(accounts) {
         await instance.addItem(name, price, {from: alice})
         await instance.buyItem(0, {from: bob, value: excessAmount})
         await instance.shipItem(0, {from: alice})
-        
+
         await catchRevert(instance.receiveItem(0, {from: alice}))
     })
 
@@ -146,7 +146,7 @@ contract('SupplyChain', function(accounts) {
         await instance.buyItem(0, {from: bob, value: excessAmount})
         await instance.shipItem(0, {from: alice})
         const tx = await instance.receiveItem(0, {from: bob})
-        
+
         if (tx.logs[0].event == "LogReceived") {
             eventEmitted = true
         }
